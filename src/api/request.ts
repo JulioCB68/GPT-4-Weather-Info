@@ -1,8 +1,11 @@
 import { APIkey, api } from "./api";
 
 export const getWeatherData = async (
-	city: string | string[] | undefined
+	lat: string | string[] | undefined,
+	long: string | string[] | undefined
 ): Promise<Weather> => {
-	const response = await api.get(`weather?q=${city}&appid=${APIkey}`);
+	const response = await api.get(
+		`weather?lat=${lat}&lon=${long}&appid=${APIkey}`
+	);
 	return response.data;
 };

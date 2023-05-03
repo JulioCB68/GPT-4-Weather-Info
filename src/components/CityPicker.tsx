@@ -52,7 +52,7 @@ const CityPicker: React.FC = () => {
 				<div className="space-y-2">
 					<div className="flex items-center space-x-2 text-white/80">
 						<GlobeIcon className="w-5 h-5 text-white" />
-						<label htmlFor="country">Country</label>
+						<label htmlFor="country">City</label>
 					</div>
 
 					<Select

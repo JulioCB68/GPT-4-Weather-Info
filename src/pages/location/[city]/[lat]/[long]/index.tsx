@@ -9,17 +9,23 @@ import { getDate } from "@/utils/getData";
 import CalloutCard from "@/components/CalloutCard";
 import StatCard from "@/components/StatCard";
 import { fahrenheitToCelsius } from "@/utils/fahrenheitToCelsius";
+import InformationPanel from "@/components/InformationPanel";
+import TempChart from "@/components/TempChart";
+import RainChart from "@/components/RainChart";
+import HumidityChart from "@/components/HumidityChart";
 
 const WeatherPage = () => {
 	const router = useRouter();
-	const { city } = router.query;
+	const { city, lat, long } = router.query;
 
-	const { data, isLoading } = useQuery(["weather", city], () =>
-		getWeatherData(city)
+	const { data, isLoading } = useQuery(["weather", lat, long], () =>
+		getWeatherData(lat, long)
 	);
 
 	return (
 		<div>
+			<InformationPanel city={city} lat={lat} long={long} data="data" />
+
 			<div>
 				<div className="p-5">
 					<div className="pb-5">
@@ -62,16 +68,22 @@ const WeatherPage = () => {
 						<div className="flex space-x-3">
 							<StatCard
 								title="Wind Speed"
-								metric={`${data?.wind.speed.toFixed(0)}m/s`}
+								metric={`${data?.wind.speed}m/s`}
 								color="cyan"
 							/>
 
 							<StatCard
 								title="Wind Direction"
-								metric={`${data?.wind.deg.toFixed(0)}º`}
+								metric={`${data?.wind.deg}º`}
 								color="violet"
 							/>
 						</div>
+					</div>
+
+					<div className="space-y-3">
+						<TempChart weatherData={data} />
+						<RainChart />
+						<HumidityChart />
 					</div>
 				</div>
 			</div>
