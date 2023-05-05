@@ -16,8 +16,7 @@ const TempChart: React.FC<Props> = ({ weatherData }: Props) => {
 	const temperatureList = generateTemperatureList(
 		Number(fahrenheitToCelsius(weatherData?.main.temp_min)),
 		Number(fahrenheitToCelsius(weatherData?.main.temp_max)),
-		Number(fahrenheitToCelsius(weatherData?.main.temp)),
-		24
+		Number(fahrenheitToCelsius(weatherData?.main.temp))
 	);
 
 	const data = temperatureList.map((temp, hour) => ({

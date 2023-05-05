@@ -1,27 +1,37 @@
 export const generateTemperatureList = (
 	minTemp: number,
 	maxTemp: number,
-	currentTemp: number,
-	numTemperatures: number
+	currentTemp: number
 ) => {
 	const temperatures = [];
-	const diff = maxTemp - minTemp + 8.0;
-	const step = diff / (numTemperatures - 1);
+	const diff = maxTemp - minTemp + 3.0;
+	const step = diff / (24 - 1);
 
-	for (let i = 0; i < numTemperatures; i++) {
-		const temperature = ((minTemp + i * step) * Math.PI) / 5;
-		const thermalSensation = Math.round(
-			(Math.sin((i / numTemperatures) * Math.PI) + 1) * 5
-		);
+	temperatures.push({
+		hour: 0,
+		temperature: minTemp.toFixed(2),
+		thermalSensation: Math.round((Math.sin(0) + 1) * 5),
+	});
+
+	for (let i = 0; i < 24; i++) {
+		let temperature = minTemp + i * step;
+		const rand = Math.random();
+		if (rand < 0.1) {
+			// chance de 10% de baixar a temperatura
+			temperature -= Math.sin(rand * Math.PI) * (diff / 4);
+		} else {
+			temperature += Math.sin(rand * Math.PI) * (diff / 4);
+		}
+		const thermalSensation = Math.round((Math.sin((i / 24) * Math.PI) + 1) * 5);
 		temperatures.push({
 			hour: i,
-			temperature: temperature,
+			temperature: temperature.toFixed(2),
 			thermalSensation: thermalSensation,
 		});
 	}
 
 	if (currentTemp >= minTemp && currentTemp <= maxTemp) {
-		temperatures.push({ temperature: currentTemp + 5.0 });
+		temperatures.push({ temperature: currentTemp });
 	}
 
 	return temperatures;
