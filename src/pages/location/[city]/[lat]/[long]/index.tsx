@@ -13,14 +13,70 @@ import InformationPanel from "@/components/InformationPanel";
 import TempChart from "@/components/TempChart";
 import RainChart from "@/components/RainChart";
 import HumidityChart from "@/components/HumidityChart";
+import { useChatGpt } from "@/api/weatherSummary";
 
 const WeatherPage = () => {
 	const router = useRouter();
 	const { city, lat, long } = router.query;
 
-	const { data, isLoading } = useQuery(["weather", lat, long], () =>
-		getWeatherData(lat, long)
+	const { data, isLoading } = useQuery(
+		["weather", lat, long],
+		() => getWeatherData(lat, long),
+		{
+			retry: 3,
+		}
 	);
+
+	// "http://localhost:3000/api/getWeatherSummary"
+
+	const weatherData = {
+		coord: {
+			lon: -48.60694,
+			lat: -27.59444,
+		},
+		weather: [
+			{
+				id: 800,
+				main: "Clear",
+				description: "clear sky",
+				icon: "01d",
+			},
+		],
+		base: "stations",
+		main: {
+			temp: 282.55,
+			feels_like: 281.86,
+			temp_min: 280.37,
+			temp_max: 284.26,
+			pressure: 1023,
+			humidity: 100,
+		},
+		visibility: 16093,
+		wind: {
+			speed: 1.5,
+			deg: 350,
+			gust: 5.97,
+		},
+		clouds: {
+			all: 1,
+		},
+		dt: 1560350645,
+		sys: {
+			type: 1,
+			id: 5122,
+			country: "US",
+			sunrise: 1560343627,
+			sunset: 1560396563,
+		},
+		timezone: -25200,
+		id: 420006353,
+		name: "Mountain View",
+		cod: 200,
+	};
+
+	const { data: GPTdata } = useChatGpt(weatherData);
+
+	console.log(GPTdata?.content);
 
 	return (
 		<div>
@@ -35,7 +91,8 @@ const WeatherPage = () => {
 						</p>
 					</div>
 					<div className="m-2 mb-10">
-						<CalloutCard message="This is where GPT-4 Summary will go!" />
+						<CalloutCard message={GPTdata?.content} />
+						{/* <CalloutCard message="This is where GPT-4 Summary will go!" /> */}
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-5 m-2 mb-10">
